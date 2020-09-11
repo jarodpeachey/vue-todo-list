@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todooey - A Simple Todo List App</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/vue"></script>
+  </head>
+
+  <body>
+    <div class="container">
+      <div id="app">
+        <h1 class="">My Todo List</h1>
+        <div class="card">
+          <div class="flex">
+            <input v-model="newItem" @keyup.enter="addItem" placeholder="Add new todo" />
+            <button @click="addItem" :disabled="newItem.length === 0">Add</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-inner">
+            <h2>Todo</h2>
+            <ul class="list">
+              <li class="list-item" :class="{completed: item.completed}" v-for="item in reversedItems">
+                <div class="list-item-toggle" @click="toggleCompleted(item)"></div><span>{{ item.name }}</span>
+                <div class="list-item-delete" @click="removeItem(item)">X</div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      new Vue( {
+        el: '#app',
+        data: {
+          newItem: '',
+          items: [
+            {
+              id: 1,
+              name: 'Clean the fridge',
+              completed: false,
+            },
+            {
+              id: 2,
+              name: 'Walk the dogs',
+              completed: true,
+            },
+          ],
+        },
+        computed: {
+          reversedItems() {
+            return this.items.slice( 0 ).reverse();
+          },
+        },
+        methods: {
+          addItem: function () {
+            this.items.push( {
+              id: this.items.length + 1,
+              name: this.newItem,
+              completed: false,
+            } );
+            this.newItem = '';
+          },
+          toggleCompleted: function ( item ) {
+            item.completed = !item.completed;
+          },
+          removeItem: function ( item ) {
+            this.items = this.items.filter( ( newItem ) => newItem.name !== item.name );
+          },
+        },
+      } );
+    </script>
+  </body>
+
+</html>
